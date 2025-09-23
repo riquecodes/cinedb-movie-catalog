@@ -1,10 +1,11 @@
 class Comment {
-  constructor({ id, movieId, userId, comment, rating, createdAt }) {
+  constructor({ id, movieId, userId, username = null, comment, commentRating, createdAt }) {
     this.id = id;
     this.movieId = movieId;
     this.userId = userId;
+    this.username = username;
     this.comment = comment;
-    this.rating = rating;
+    this.commentRating = commentRating;
     this.createdAt = createdAt;
   }
 }

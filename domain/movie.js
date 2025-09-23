@@ -1,4 +1,4 @@
-class Recipe {
+class Movie {
   constructor({
     id,
     title,
@@ -24,4 +24,4 @@ class Recipe {
   }
 }
 
-module.exports = Recipe;
+module.exports = Movie;

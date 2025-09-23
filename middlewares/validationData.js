@@ -37,7 +37,7 @@ function validateMovie(req, res, next) {
 }
 
 function validateComment(req, res, next) {
-  const { comment, rating } = req.body;
+  const { comment, commentRating } = req.body;
   if (!comment || comment.trim().length < 10) {
     return res
       .status(400)
@@ -46,7 +46,7 @@ function validateComment(req, res, next) {
       });
   }
 
-  if (!rating || rating < 1 || rating > 5) {
+  if (!commentRating || commentRating < 1 || commentRating > 5) {
     return res.status(400).send({
       error: "A avaliação deve ser um número entre 1 e 5.",
     });
@@ -54,4 +54,4 @@ function validateComment(req, res, next) {
   next();
 }
 
-module.exports = { validateRecipe, validateComment };
+module.exports = { validateMovie, validateComment };

@@ -1,26 +1,54 @@
 const pool = require("../db");
 const Movie = require("../domain/movie");
 
+const parseJsonSafe = (jsonString) => {
+  if (!jsonString) return [];
+  try {
+    return JSON.parse(jsonString);
+  } catch (e) {
+    return [];
+  }
+};
+
 const movieModel = {
+  async updateAverageRating(movieId) {
+    const [rows] = await pool.query(
+      "SELECT rating FROM comments WHERE movie_id = ?",
+      [movieId]
+    );
+
+    if (rows.length === 0) {
+      return;
+    }
+
+    const sum = rows.reduce((total, row) => total + row.rating, 0);
+    const average = sum / rows.length;
+
+    await pool.query("UPDATE movies SET rating = ? WHERE id = ?", [
+      average,
+      movieId,
+    ]);
+  },
+
   async create({
     title,
     synopsis,
     cast,
     director,
-    genrers,
+    genres,
     year,
     rating,
     poster,
   }) {
     const [result] = await pool.query(
-      `INSERT INTO movies (title, synopsis, cast, director, genrers, year, rating, poster)
+      `INSERT INTO movies (title, synopsis, cast, director, genres, year, rating, poster)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         title,
         synopsis,
         JSON.stringify(cast),
         director,
-        JSON.stringify(genrers),
+        JSON.stringify(genres),
         year,
         rating,
         poster,
@@ -33,7 +61,7 @@ const movieModel = {
       synopsis,
       cast,
       director,
-      genrers,
+      genres,
       year,
       rating,
       poster,
@@ -50,9 +78,9 @@ const movieModel = {
           id: m.id,
           title: m.title,
           synopsis: m.synopsis,
-          cast: JSON.parse(m.cast),
+          cast: parseJsonSafe(m.cast),
           director: m.director,
-          genrers: JSON.parse(m.genrers),
+          genres: parseJsonSafe(m.genres),
           year: m.year,
           rating: m.rating,
           poster: m.poster,
@@ -69,9 +97,9 @@ const movieModel = {
       id: m.id,
       title: m.title,
       synopsis: m.synopsis,
-      cast: JSON.parse(m.cast),
+      cast: parseJsonSafe(m.cast),
       director: m.director,
-      genrers: JSON.parse(m.genrers),
+      genres: parseJsonSafe(m.genres),
       year: m.year,
       rating: m.rating,
       poster: m.poster,
@@ -95,9 +123,9 @@ const movieModel = {
           id: m.id,
           title: m.title,
           synopsis: m.synopsis,
-          cast: JSON.parse(m.cast),
+          cast: parseJsonSafe(m.cast),
           director: m.director,
-          genrers: JSON.parse(m.genrers),
+          genres: parseJsonSafe(m.genres),
           year: m.year,
           rating: m.rating,
           poster: m.poster,
@@ -108,8 +136,8 @@ const movieModel = {
     return { movies, total };
   },
 
-  async findBySearchFilter(term = null, genrer = null, limit = 6, offset = 0) {
-    const searchTerm = `%${term}%`;
+  async findBySearchFilter(term = null, genre = null, limit = 6, offset = 0) {
+    const searchTerm = term ? `%${term}%` : null;
 
     let query = `SELECT * FROM movies WHERE 1=1`;
     const params = [];
@@ -117,20 +145,20 @@ const movieModel = {
     let countQuery = `SELECT COUNT(*) AS total FROM movies WHERE 1=1`;
     const countParams = [];
 
-    if (term) {
-      query += ` AND title LIKE LOWER(?)`;
+    if (searchTerm) {
+      query += ` AND title LIKE ?`;
       params.push(searchTerm);
 
-      countQuery += ` AND title LIKE LOWER(?)`;
+      countQuery += ` AND title LIKE ?`;
       countParams.push(searchTerm);
     }
 
-    if (genrer) {
-      query += ` AND JSON_CONTAINS(genrers, ?)`;
-      params.push(JSON.stringify(genrer));
+    if (genre) {
+      query += ` AND JSON_CONTAINS(genres, ?)`;
+      params.push(JSON.stringify(genre));
 
-      countQuery += ` AND JSON_CONTAINS(genrers, ?)`;
-      countParams.push(JSON.stringify(genrer));
+      countQuery += ` AND JSON_CONTAINS(genres, ?)`;
+      countParams.push(JSON.stringify(genre));
     }
 
     query += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
@@ -146,9 +174,9 @@ const movieModel = {
           id: m.id,
           title: m.title,
           synopsis: m.synopsis,
-          cast: JSON.parse(m.cast),
+          cast: parseJsonSafe(m.cast),
           director: m.director,
-          genrers: JSON.parse(m.genrers),
+          genres: parseJsonSafe(m.genres),
           year: m.year,
           rating: m.rating,
           poster: m.poster,
@@ -157,6 +185,32 @@ const movieModel = {
     );
 
     return { movies, total };
+  },
+
+  async deleteMovie(id) {
+    const [result] = await pool.query("DELETE FROM movies WHERE id = ?", [id]);
+    return result.affectedRows > 0;
+  },
+
+  async updateMovie(
+    id,
+    { title, synopsis, cast, director, genres, year, rating, poster }
+  ) {
+    const [result] = await pool.query(
+      "UPDATE movies SET title = ?, synopsis = ?, cast = ?, director = ?, genres = ?, year = ?, rating = ?, poster = ? WHERE id = ?",
+      [
+        title,
+        synopsis,
+        JSON.stringify(cast),
+        director,
+        JSON.stringify(genres),
+        year,
+        rating,
+        poster,
+        id,
+      ]
+    );
+    return result.affectedRows > 0;
   },
 };
 
