@@ -1,0 +1,40 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<main class="container">
+    <div class="search-container">
+        <form action="/catalog" method="GET" class="search-form">
+            <input type="text" name="search" class="search-bar" placeholder="Buscar por título...">
+            <select name="genre" class="genre-filter">
+                <option value="">Todos os gêneros</option>
+                <% genres.forEach(genre => { %>
+                    <option value="<%= genre %>" <%= currentGenre === genre ? 'selected' : '' %>>
+                        <%= genre %>
+                    </option>
+                <% }) %>
+            </select>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+
+    <h2 class="section-title">Filmes em Destaque</h2>
+    
+    <% if (movies.length === 0) { %>
+        <p>Nenhum filme encontrado com os critérios de busca.</p>
+    <% } else { %>
+        <section class="movies-grid">
+            <% movies.forEach(movie => { %>
+                <a href="/movie/<%= movie.id %>" class="movie-card">
+                    <img src="<%= movie.poster || 'https://via.placeholder.com/400x600.png?text=No+Image' %>" alt="Pôster de <%= movie.title %>">
+                    <div class="movie-info">
+                        <h3><%= movie.title %></h3>
+                        <p><%= movie.year %> • <%= movie.genres.join(', ') %></p>
+                        <span class="star-rating">⭐ <%= movie.rating %></span>
+                    </div>
+                </a>
+            <% }) %>
+        </section>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>

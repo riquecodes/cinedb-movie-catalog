@@ -1,0 +1,89 @@
+<%- include('../partials/header') %> <%- include('../partials/nav') %>
+
+<main class="container admin-panel">
+  <h1>Editar Filme: <%= movie.title %></h1>
+  <form
+    class="admin-form"
+    action="/admin/edit/<%= movie.id %>"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <div class="form-row">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value="<%= movie.title %>"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="year">Ano</label>
+        <input
+          type="number"
+          id="year"
+          name="year"
+          value="<%= movie.year %>"
+          required
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="genres">Gêneros (separados por vírgula)</label>
+        <input
+          type="text"
+          id="genres"
+          name="genres"
+          value="<%= movie.genres.join(', ') %>"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="director">Diretor</label>
+        <input
+          type="text"
+          id="director"
+          name="director"
+          value="<%= movie.director %>"
+          required
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="cast">Elenco (separado por vírgula)</label>
+      <input
+        type="text"
+        id="cast"
+        name="cast"
+        value="<%= movie.cast.join(', ') %>"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="synopsis">Sinopse</label>
+      <textarea id="synopsis" name="synopsis" rows="5" required>
+<%= movie.synopsis %></textarea
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="poster"
+        >Novo Pôster (deixe em branco para manter o atual)</label
+      >
+      <input type="file" id="poster" name="poster" accept="image/*" />
+      <% if (movie.poster) { %>
+      <p>Pôster Atual:</p>
+      <img src="<%= movie.poster %>" alt="Pôster atual" width="100" />
+      <% } %>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+      <a href="/admin" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>

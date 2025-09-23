@@ -1,0 +1,51 @@
+<%- include('../partials/header') %> <%- include('../partials/nav') %>
+
+<main class="container admin-panel">
+  <h1>Adicionar Novo Filme</h1>
+
+  <form
+    class="admin-form"
+    action="/admin/add"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <div class="form-row">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input type="text" id="title" name="title" required />
+      </div>
+      <div class="form-group">
+        <label for="year">Ano</label>
+        <input type="number" id="year" name="year" required />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="genres">Gêneros (separados por vírgula)</label>
+        <input type="text" id="genres" name="genres" required />
+      </div>
+      <div class="form-group">
+        <label for="director">Diretor</label>
+        <input type="text" id="director" name="director" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="cast">Elenco (separado por vírgula)</label>
+      <input type="text" id="cast" name="cast" required />
+    </div>
+    <div class="form-group">
+      <label for="synopsis">Sinopse</label>
+      <textarea id="synopsis" name="synopsis" rows="5" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="poster">Pôster do Filme</label>
+      <input type="file" id="poster" name="poster" accept="image/*" />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a href="/admin" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>

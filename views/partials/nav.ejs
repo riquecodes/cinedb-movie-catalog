@@ -1,0 +1,12 @@
+<nav class="navbar">
+  <a href="/catalog" class="logo">CineDB</a>
+  <div class="nav-links">
+    <a href="/catalog">Início</a>
+    <% if (session.user && session.user.username === 'admin') { %>
+    <a href="/admin">Admin</a>
+    <a href="/logout">Logout</a>
+    <% } else if (session.user) { %>
+    <a href="/logout">Logout</a>
+    <% } %>
+  </div>
+</nav>
