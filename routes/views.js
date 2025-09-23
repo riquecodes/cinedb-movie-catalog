@@ -53,7 +53,7 @@ router.post('/register', async (req, res) => {
         await userModel.register({ username, password });
         res.redirect('/');
     } catch (error) {
-        console.error("ERRO DETALHADO NO LOGIN:", error);
+        console.error("erro no register:", error);
         res.render('register', { error: 'Ocorreu um erro ao registrar.' });
     }
 });
@@ -69,7 +69,7 @@ router.post('/login', async (req, res) => {
             req.session.user = { id: adminUser.id, username: adminUser.username };
             return res.redirect('/admin');
         } catch (error) {
-            console.error("ERRO DETALHADO NO LOGIN:", error);
+            console.error("erro no login:", error);
             return res.render('login', { error: 'Ocorreu um erro ao processar o login do admin.' });
         }
     }
