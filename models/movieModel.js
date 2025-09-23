@@ -1,15 +1,6 @@
 const pool = require("../db");
 const Movie = require("../domain/movie");
 
-const parseJsonSafe = (jsonString) => {
-  if (!jsonString) return [];
-  try {
-    return JSON.parse(jsonString);
-  } catch (e) {
-    return [];
-  }
-};
-
 const movieModel = {
   async updateAverageRating(movieId) {
     const [rows] = await pool.query(
@@ -78,9 +69,9 @@ const movieModel = {
           id: m.id,
           title: m.title,
           synopsis: m.synopsis,
-          cast: parseJsonSafe(m.cast),
+          cast: JSON.parse(m.cast),
           director: m.director,
-          genres: parseJsonSafe(m.genres),
+          genres: JSON.parse(m.genres),
           year: m.year,
           rating: m.rating,
           poster: m.poster,
@@ -97,9 +88,9 @@ const movieModel = {
       id: m.id,
       title: m.title,
       synopsis: m.synopsis,
-      cast: parseJsonSafe(m.cast),
+      cast: JSON.parse(m.cast),
       director: m.director,
-      genres: parseJsonSafe(m.genres),
+      genres: JSON.parse(m.genres),
       year: m.year,
       rating: m.rating,
       poster: m.poster,
@@ -123,9 +114,9 @@ const movieModel = {
           id: m.id,
           title: m.title,
           synopsis: m.synopsis,
-          cast: parseJsonSafe(m.cast),
+          cast: JSON.parse(m.cast),
           director: m.director,
-          genres: parseJsonSafe(m.genres),
+          genres: JSON.parse(m.genres),
           year: m.year,
           rating: m.rating,
           poster: m.poster,
@@ -174,9 +165,9 @@ const movieModel = {
           id: m.id,
           title: m.title,
           synopsis: m.synopsis,
-          cast: parseJsonSafe(m.cast),
+          cast: JSON.parse(m.cast),
           director: m.director,
-          genres: parseJsonSafe(m.genres),
+          genres: JSON.parse(m.genres),
           year: m.year,
           rating: m.rating,
           poster: m.poster,
