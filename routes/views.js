@@ -53,6 +53,7 @@ router.post('/register', async (req, res) => {
         await userModel.register({ username, password });
         res.redirect('/');
     } catch (error) {
+        console.error("ERRO DETALHADO NO LOGIN:", error);
         res.render('register', { error: 'Ocorreu um erro ao registrar.' });
     }
 });
