@@ -126,8 +126,6 @@ const movieModel = {
         poster: m.poster,
         createdAt: m.createdAt,
       });
-    });
-
     return { movies, total };
   },
 
