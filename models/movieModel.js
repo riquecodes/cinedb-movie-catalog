@@ -31,15 +31,22 @@ const movieModel = {
     rating,
     poster,
   }) {
+    const safeCast = Array.isArray(cast)
+      ? cast
+      : cast.split(",").map((s) => s.trim());
+    const safeGenres = Array.isArray(genres)
+      ? genres
+      : genres.split(",").map((s) => s.trim());
+
     const [result] = await pool.query(
       `INSERT INTO movies (title, synopsis, cast, director, genres, year, rating, poster)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         title,
         synopsis,
-        JSON.stringify(cast),
+        JSON.stringify(safeCast),
         director,
-        JSON.stringify(genres),
+        JSON.stringify(safeGenres),
         year,
         rating,
         poster,
@@ -50,9 +57,9 @@ const movieModel = {
       id: result.insertId,
       title,
       synopsis,
-      cast,
+      cast: safeCast,
       director,
-      genres,
+      genres: safeGenres,
       year,
       rating,
       poster,
