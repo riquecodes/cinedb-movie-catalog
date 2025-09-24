@@ -112,8 +112,22 @@ const movieModel = {
     );
 
     const movies = rows.map((m) => {
-      const cast = Array.isArray(m.cast) ? m.cast : [];
-      const genres = Array.isArray(m.genres) ? m.genres : [];
+      let cast = [];
+      let genres = [];
+
+      try {
+        cast = Array.isArray(m.cast) ? m.cast : JSON.parse(m.cast || "[]");
+      } catch {
+        cast = [];
+      }
+
+      try {
+        genres = Array.isArray(m.genres)
+          ? m.genres
+          : JSON.parse(m.genres || "[]");
+      } catch {
+        genres = [];
+      }
 
       return new Movie({
         id: m.id,
@@ -128,6 +142,7 @@ const movieModel = {
         createdAt: m.createdAt,
       });
     });
+
     return { movies, total };
   },
 
