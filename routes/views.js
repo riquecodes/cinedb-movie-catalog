@@ -94,6 +94,7 @@ router.get('/catalog', isAuthenticated, async (req, res) => {
         const uniqueGenres = [...new Set(allGenres)].sort();
         res.render('index', { movies, genres: uniqueGenres, currentGenre: genre });
     } catch (error) {
+        console.error("Erro ao carregar filmes:", error);
         res.status(500).send("Erro ao carregar filmes.");
     }
 });
