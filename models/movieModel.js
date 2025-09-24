@@ -163,21 +163,38 @@ const movieModel = {
 
     const [[{ total }]] = await pool.query(countQuery, countParams);
 
-    const movies = rows.map(
-      (m) =>
-        new Movie({
-          id: m.id,
-          title: m.title,
-          synopsis: m.synopsis,
-          cast: JSON.parse(m.cast),
-          director: m.director,
-          genres: JSON.parse(m.genres),
-          year: m.year,
-          rating: m.rating,
-          poster: m.poster,
-          createdAt: m.createdAt,
-        })
-    );
+    const movies = rows.map((m) => {
+      // cast e genres podem vir nulos ou strings inválidas
+      let cast = [];
+      let genres = [];
+
+      try {
+        cast = Array.isArray(m.cast) ? m.cast : JSON.parse(m.cast || "[]");
+      } catch {
+        cast = [];
+      }
+
+      try {
+        genres = Array.isArray(m.genres)
+          ? m.genres
+          : JSON.parse(m.genres || "[]");
+      } catch {
+        genres = [];
+      }
+
+      return new Movie({
+        id: m.id,
+        title: m.title,
+        synopsis: m.synopsis,
+        cast,
+        director: m.director,
+        genres,
+        year: m.year,
+        rating: m.rating,
+        poster: m.poster,
+        createdAt: m.createdAt,
+      });
+    });
 
     return { movies, total };
   },
