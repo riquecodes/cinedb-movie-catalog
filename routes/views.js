@@ -89,7 +89,7 @@ router.get('/catalog', isAuthenticated, async (req, res) => {
     try {
         const { search, genre } = req.query;
         const { movies } = await movieModel.findBySearchFilter(search, genre, 20, 0);
-        const allMoviesResponse = await movieModel.findMovies(1000, 0);
+        const allMoviesResponse = await movieModel.findMovies(100, 0);
         const allGenres = allMoviesResponse.movies.flatMap(movie => movie.genres);
         const uniqueGenres = [...new Set(allGenres)].sort();
         res.render('index', { movies, genres: uniqueGenres, currentGenre: genre });

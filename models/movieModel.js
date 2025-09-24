@@ -115,21 +115,35 @@ const movieModel = {
       `SELECT COUNT(*) AS total FROM movies`
     );
 
-    const movies = rows.map(
-      (m) =>
-        new Movie({
-          id: m.id,
-          title: m.title,
-          synopsis: m.synopsis,
-          cast: JSON.parse(m.cast),
-          director: m.director,
-          genres: JSON.parse(m.genres),
-          year: m.year,
-          rating: m.rating,
-          poster: m.poster,
-          createdAt: m.createdAt,
-        })
-    );
+    const movies = rows.map((m) => {
+      let cast = [];
+      let genres = [];
+
+      try {
+        cast = JSON.parse(m.cast);
+      } catch {
+        cast = m.cast ? m.cast.split(',').map(s => s.trim()) : [];
+      }
+
+      try {
+        genres = JSON.parse(m.genres);
+      } catch {
+        genres = m.genres ? m.genres.split(',').map(s => s.trim()) : [];
+      }
+
+      return new Movie({
+        id: m.id,
+        title: m.title,
+        synopsis: m.synopsis,
+        cast,
+        director: m.director,
+        genres,
+        year: m.year,
+        rating: m.rating,
+        poster: m.poster,
+        createdAt: m.createdAt,
+      });
+    });
 
     return { movies, total };
   },
