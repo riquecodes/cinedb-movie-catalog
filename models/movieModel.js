@@ -31,12 +31,8 @@ const movieModel = {
     rating,
     poster,
   }) {
-    const safeCast = Array.isArray(cast)
-      ? cast
-      : cast.split(",").map((s) => s.trim());
-    const safeGenres = Array.isArray(genres)
-      ? genres
-      : genres.split(",").map((s) => s.trim());
+    const safeCast = Array.isArray(cast) ? cast : (cast ? [cast] : []);
+    const safeGenres = Array.isArray(genres) ? genres : (genres ? [genres] : []);
 
     const [result] = await pool.query(
       `INSERT INTO movies (title, synopsis, cast, director, genres, year, rating, poster)
@@ -115,21 +111,8 @@ const movieModel = {
       `SELECT COUNT(*) AS total FROM movies`
     );
 
-    const movies = rows.map((m) => {
-      let cast = [];
-      let genres = [];
-
-      try {
-        cast = JSON.parse(m.cast);
-      } catch {
-        cast = m.cast ? m.cast.split(',').map(s => s.trim()) : [];
-      }
-
-      try {
-        genres = JSON.parse(m.genres);
-      } catch {
-        genres = m.genres ? m.genres.split(',').map(s => s.trim()) : [];
-      }
+    const cast = Array.isArray(m.cast) ? m.cast : [];
+    const genres = Array.isArray(m.genres) ? m.genres : [];
 
       return new Movie({
         id: m.id,
