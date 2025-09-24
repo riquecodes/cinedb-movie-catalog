@@ -164,7 +164,6 @@ const movieModel = {
     const [[{ total }]] = await pool.query(countQuery, countParams);
 
     const movies = rows.map((m) => {
-      // cast e genres podem vir nulos ou strings inválidas
       let cast = [];
       let genres = [];
 
