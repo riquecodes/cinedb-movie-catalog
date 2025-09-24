@@ -86,17 +86,36 @@ const movieModel = {
   async findById(id) {
     const [rows] = await pool.query("SELECT * FROM movies WHERE id = ?", [id]);
     if (rows.length === 0) return null;
+
     const m = rows[0];
+
+    let cast = [];
+    let genres = [];
+
+    try {
+      cast = Array.isArray(m.cast) ? m.cast : JSON.parse(m.cast || "[]");
+    } catch {
+      cast = [];
+    }
+
+    try {
+      genres = Array.isArray(m.genres)
+        ? m.genres
+        : JSON.parse(m.genres || "[]");
+    } catch {
+      genres = [];
+    }
+
     return new Movie({
       id: m.id,
       title: m.title,
       synopsis: m.synopsis,
-      cast: JSON.parse(m.cast),
+      cast,
       director: m.director,
-      genres: JSON.parse(m.genres),
+      genres,
       year: m.year,
       rating: m.rating,
-      poster: m.poster,
+      poster: m.poster || "/images/default-poster.jpg",
       createdAt: m.createdAt,
     });
   },
